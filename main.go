@@ -19,7 +19,7 @@ func main() {
 	r.Get("/feed/{query}", func(w http.ResponseWriter, r *http.Request) {
 		queryText := chi.URLParam(r, "query")
 
-		myStoredVariable := httpd.NewsfeedGet(queryText)
+		myStoredVariable := httpd.GetData(queryText)
 		feed.AddAll(myStoredVariable.Hits)
 		items := feed.GetAll()
 
