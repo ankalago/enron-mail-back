@@ -1,4 +1,4 @@
-package newsfeed
+package entities
 
 type Request struct {
 	Took     int    `json:"took"`
@@ -10,17 +10,12 @@ type Request struct {
 }
 
 type Item struct {
-	Athlete    string `json:"athlete"`
-	City       string `json:"city"`
-	Country    string `json:"country"`
-	Discipline string `json:"discipline"`
-	Event      string `json:"event"`
-	Gender     string `json:"gender"`
-	Medal      string `json:"medal"`
-	Season     string `json:"season"`
-	Sport      string `json:"sport"`
-	Year       int    `json:"year"`
-	Timestamp  int    `json:"_timestamp"`
+	From      string `json:"from"`
+	To        string `json:"to"`
+	Subject   string `json:"subject"`
+	Origin    string `json:"origin"`
+	Content   string `json:"content"`
+	Timestamp int    `json:"_timestamp"`
 }
 
 type Repo struct {
