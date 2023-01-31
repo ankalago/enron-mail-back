@@ -44,8 +44,8 @@ func GetFolder(url string) []Folder {
 	return folders
 }
 
-func ScanDirectory(baseUrl string) []Message {
-	var messages []Message
+func ScanDirectory(baseUrl string) []string {
+	var messages []string
 	err := filepath.Walk(baseUrl,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -59,7 +59,8 @@ func ScanDirectory(baseUrl string) []Message {
 			} else {
 				if info.Name() != ".DS_Store" {
 					//fmt.Printf("    |-- %s\n", info.name()) // path
-					messages = append(messages, scanFile(path))
+					//messages = append(messages, scanFile(path))
+					messages = append(messages, path)
 				}
 			}
 			return nil
@@ -70,7 +71,7 @@ func ScanDirectory(baseUrl string) []Message {
 	return messages
 }
 
-func scanFile(url string) Message {
+func ScanFile(url string) Message {
 	file, err := os.Open(url)
 
 	if err != nil {
@@ -84,28 +85,35 @@ func scanFile(url string) Message {
 	aux := 0
 	indexLineContent := 0
 	indexLineOrigin := 0
-	var xOrigin int
+	indexSubject := 0
 	for scanner.Scan() {
 		txtLines = append(txtLines, ValidateEmptyText(scanner.Text()))
 		xFileName := strings.Index(scanner.Text(), constants.XFileName)
-		xOrigin = strings.Index(scanner.Text(), constants.XOrigin)
+		xOrigin := strings.Index(scanner.Text(), constants.XOrigin)
+		subject := strings.Index(scanner.Text(), constants.Subject)
 		if xFileName >= 0 {
 			indexLineContent = aux
 		}
 		if xOrigin >= 0 {
 			indexLineOrigin = aux
 		}
+		if subject >= 0 {
+			indexSubject = aux
+		}
 		aux++
 	}
 
 	defer file.Close()
 
+	//fmt.Println(FormatText(strings.ToLower(txtLines[indexLineOrigin])), FormatText(txtLines[3]))
+
+	textContent := strings.Join(txtLines[indexLineContent+2:], "")
 	message := Message{
 		To:      FormatText(txtLines[3]),
 		From:    FormatText(txtLines[2]),
-		Subject: FormatText(txtLines[4]),
+		Subject: FormatText(txtLines[indexSubject]),
 		Origin:  FormatText(strings.ToLower(txtLines[indexLineOrigin])),
-		Content: strings.Join(txtLines[indexLineContent+1:], ""),
+		Content: textContent[0:LimitCharacters(textContent)],
 	}
 	return message
 }
