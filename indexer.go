@@ -5,8 +5,7 @@ import (
 )
 
 func main() {
-	//baseUrl := "/Users/pauljacome/Downloads/enron_mail_20110402/test"
-	baseUrl := "/Users/pauljacome/Downloads/enron_mail_20110402/maildir"
+	baseUrl := "./emails/enron_mail_20110402/maildir"
 
 	//result := RecursiveScan(baseUrl, "", 0)
 	//file, err := json.Marshal(result)
